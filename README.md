@@ -1,6 +1,6 @@
-# LogBrowse
+# LogBrow
 
-A simple tool to browse logs in your browser. Pipe logs into the server and view them live at http://localhost:3000.
+Utility to browse logs in your browser. Pipe logs into the server and view them live at http://localhost:3000.
 
 ## Usage
 
