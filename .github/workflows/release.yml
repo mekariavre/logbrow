@@ -1,10 +1,10 @@
 name: Build and Release
-
+permissions:
+  contents: write
 on:
   push:
     tags:
-      - '*'
-
+      - "*"
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -15,7 +15,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: "16"
 
       - name: Install dependencies
         run: npm install
@@ -26,7 +26,6 @@ jobs:
       - name: Get version from tag
         id: get_version
         run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
-
 
       - name: Zip release files per platform
         run: |
@@ -39,23 +38,12 @@ jobs:
           zip logbrow-win-${VERSION}.zip logbrow-win-${VERSION}.exe
           rm logbrow-macos-${VERSION} logbrow-linux-${VERSION} logbrow-win-${VERSION}.exe
 
-      - name: Upload Release Assets (macOS)
+      - name: Upload release assets to GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          files: dist/logbrow-macos-${{ env.VERSION }}.zip
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload Release Assets (Linux)
-        uses: softprops/action-gh-release@v2
-        with:
-          files: dist/logbrow-linux-${{ env.VERSION }}.zip
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload Release Assets (Windows)
-        uses: softprops/action-gh-release@v2
-        with:
-          files: dist/logbrow-win-${{ env.VERSION }}.zip
+          files: |
+            dist/logbrow-macos-${{ env.VERSION }}.zip
+            dist/logbrow-linux-${{ env.VERSION }}.zip
+            dist/logbrow-win-${{ env.VERSION }}.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
