@@ -1,0 +1,61 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build binaries
+        run: make pkg
+
+      - name: Get version from tag
+        id: get_version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+
+
+      - name: Zip release files per platform
+        run: |
+          cd dist
+          cp logbrow-macos logbrow-macos-${VERSION}
+          cp logbrow-linux logbrow-linux-${VERSION}
+          cp logbrow-win.exe logbrow-win-${VERSION}.exe
+          zip logbrow-macos-${VERSION}.zip logbrow-macos-${VERSION}
+          zip logbrow-linux-${VERSION}.zip logbrow-linux-${VERSION}
+          zip logbrow-win-${VERSION}.zip logbrow-win-${VERSION}.exe
+          rm logbrow-macos-${VERSION} logbrow-linux-${VERSION} logbrow-win-${VERSION}.exe
+
+      - name: Upload Release Assets (macOS)
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/logbrow-macos-${{ env.VERSION }}.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Release Assets (Linux)
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/logbrow-linux-${{ env.VERSION }}.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Release Assets (Windows)
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/logbrow-win-${{ env.VERSION }}.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
