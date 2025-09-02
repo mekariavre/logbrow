@@ -1,9 +1,11 @@
 // Log rendering functionality
+
 class LogRenderer {
     constructor() {
         this.allLogs = [];
         this.expanded = {};
         this.prettyPrintMode = false;
+        this.jsonOnlyMode = false;
     }
 
     setLogs(logs) {
@@ -50,11 +52,23 @@ class LogRenderer {
         // Track if any logs will be displayed
         let hasVisibleLogs = false;
 
+        // Helper to check if a log is JSON
+        const isJson = (str) => {
+            if (typeof str !== 'string') return false;
+            try {
+                const obj = JSON.parse(str);
+                return typeof obj === 'object' && obj !== null;
+            } catch {
+                return false;
+            }
+        };
+
         // Reverse the logs so newest is on top
         this.allLogs.slice().reverse().forEach((log, i) => {
             const idx = this.allLogs.length - 1 - i;
             let logStr = typeof log === 'string' ? log : JSON.stringify(log);
             if (search && logStr.toLowerCase().indexOf(search) === -1) return;
+            if (this.jsonOnlyMode && !isJson(logStr)) return;
 
             // Mark that we have visible logs
             if (!hasVisibleLogs) {
@@ -103,6 +117,11 @@ class LogRenderer {
         if (!hasVisibleLogs) {
             logsDiv.className = '';
         }
+    }
+
+    setJsonOnlyMode(on) {
+        this.jsonOnlyMode = on;
+        this.render();
     }
 
     setPrettyPrintMode(on) {
