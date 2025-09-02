@@ -13,6 +13,14 @@ class LogRenderer {
         const search = document.getElementById('search').value.toLowerCase();
         const logsDiv = document.getElementById('logs');
         logsDiv.innerHTML = '';
+        if (this.allLogs.length === 0) {
+            logsDiv.className = '';
+            // Optionally, show a message:
+            // logsDiv.innerHTML = '<div class="text-gray-400 text-center py-8">No logs yet</div>';
+            return;
+        }
+        // Add outer rounded border and background
+        logsDiv.className = 'border border-gray-200 rounded-lg bg-white overflow-hidden';
 
         // Reverse the logs so newest is on top
         this.allLogs.slice().reverse().forEach((log, i) => {
@@ -38,13 +46,15 @@ class LogRenderer {
 
     createLogContainer() {
         const container = document.createElement('div');
-        container.className = 'border border-gray-200 rounded-lg mb-2 bg-white hover:border-gray-300 hover:shadow-md transition-all duration-200';
+        // Remove margin and rounded corners for seamless joining
+        container.className = 'border-b border-gray-200 last:border-b-0';
         return container;
     }
 
     createLogHeader(logStr, idx) {
         const header = document.createElement('div');
-        header.className = 'p-4 cursor-pointer font-mono text-sm text-gray-600 relative';
+        // Tighter padding, no rounded corners, seamless look
+        header.className = 'px-4 py-2 cursor-pointer font-mono text-sm text-gray-600 relative bg-white hover:bg-gray-50 transition-all duration-200';
         header.onclick = () => {
             this.expanded[idx] = !this.expanded[idx];
             this.render();
@@ -52,14 +62,15 @@ class LogRenderer {
 
         const short = logStr.length > 120 ? logStr.slice(0, 120) + '…' : logStr;
         const arrow = this.expanded[idx] ? '▼' : '▶';
-        header.innerHTML = `${short}<span class="absolute right-4 top-4 text-gray-400 text-xs">${arrow}</span>`;
+        header.innerHTML = `${short}<span class="absolute right-4 top-2 text-gray-400 text-xs">${arrow}</span>`;
 
         return header;
     }
 
     createExpandedContent(log, logStr) {
-        const expandedDiv = document.createElement('div');
-        expandedDiv.className = 'border-t border-gray-200';
+    const expandedDiv = document.createElement('div');
+    // Add a lighter, thinner border only above the expanded area for separation
+    expandedDiv.className = 'bg-gray-50 px-4 pb-4 border-t border-gray-200';
 
         // Pretty print JSON if possible
         let pretty = '';
@@ -69,7 +80,7 @@ class LogRenderer {
             pretty = logStr;
         }
 
-        expandedDiv.innerHTML = `<pre class="bg-gray-50 p-4 rounded-b-lg font-mono text-xs overflow-x-auto text-gray-700">${pretty}</pre>`;
+        expandedDiv.innerHTML = `<pre class="font-mono text-xs overflow-x-auto text-gray-700">${pretty}</pre>`;
         return expandedDiv;
     }
 
