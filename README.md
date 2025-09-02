@@ -33,7 +33,7 @@ You can build and install LogBrow as a standalone executable using [pkg](https:/
 	make pkg
 	```
 	The Makefile will automatically install `pkg` globally if it is not already available in your PATH.
-	The binaries will be in the `dist/` folder (e.g., `dist/logbrowse-macos`).
+	The binaries will be in the `dist/` folder (e.g., `dist/logbrow-macos`).
 
 ## Project Structure
 

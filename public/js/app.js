@@ -1,5 +1,5 @@
 // Main application logic
-class LogBrowseApp {
+class LogBrowApp {
     constructor() {
         this.renderer = new LogRenderer();
         this.init();
@@ -53,5 +53,5 @@ class LogBrowseApp {
 
 // Initialize the app when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    new LogBrowseApp();
+    new LogBrowApp();
 });
