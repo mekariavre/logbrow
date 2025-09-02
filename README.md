@@ -1,4 +1,7 @@
-# LogBrow
+
+# logbrow
+
+![LogBrow Screenshot](./screenshot.png)
 
 Utility to browse logs in your browser. Pipe logs into the server and view them live at http://localhost:3000.
 
