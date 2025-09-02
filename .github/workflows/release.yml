@@ -1,10 +1,10 @@
 name: Build and Release
-
+permissions:
+  contents: write
 on:
   push:
     tags:
       - "*"
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -38,18 +38,12 @@ jobs:
           zip logbrow-win-${VERSION}.zip logbrow-win-${VERSION}.exe
           rm logbrow-macos-${VERSION} logbrow-linux-${VERSION} logbrow-win-${VERSION}.exe
 
-      - name: Upload zipped release files as assets (macOS)
-        uses: actions/upload-artifact@v4
+      - name: Upload release assets to GitHub Release
+        uses: softprops/action-gh-release@v2
         with:
-          name: logbrow-macos-${{ env.VERSION }}.zip
-          path: dist/logbrow-macos-${{ env.VERSION }}.zip
-      - name: Upload zipped release files as assets (Linux)
-        uses: actions/upload-artifact@v4
-        with:
-          name: logbrow-linux-${{ env.VERSION }}.zip
-          path: dist/logbrow-linux-${{ env.VERSION }}.zip
-      - name: Upload zipped release files as assets (Windows)
-        uses: actions/upload-artifact@v4
-        with:
-          name: logbrow-win-${{ env.VERSION }}.zip
-          path: dist/logbrow-win-${{ env.VERSION }}.zip
+          files: |
+            dist/logbrow-macos-${{ env.VERSION }}.zip
+            dist/logbrow-linux-${{ env.VERSION }}.zip
+            dist/logbrow-win-${{ env.VERSION }}.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
