@@ -18,13 +18,21 @@ class LogRenderer {
             logsDiv.className = '';
             return;
         }
-        logsDiv.className = 'border border-gray-200 rounded-lg bg-white overflow-hidden';
 
+        // Track if any logs will be displayed
+        let hasVisibleLogs = false;
+        
         // Reverse the logs so newest is on top
         this.allLogs.slice().reverse().forEach((log, i) => {
             const idx = this.allLogs.length - 1 - i;
             let logStr = typeof log === 'string' ? log : JSON.stringify(log);
             if (search && logStr.toLowerCase().indexOf(search) === -1) return;
+
+            // Mark that we have visible logs
+            if (!hasVisibleLogs) {
+                hasVisibleLogs = true;
+                logsDiv.className = 'border border-gray-200 rounded-lg bg-white overflow-hidden';
+            }
 
             const container = this.createLogContainer();
 
@@ -62,6 +70,11 @@ class LogRenderer {
             }
             logsDiv.appendChild(container);
         });
+        
+        // If no logs were visible after filtering, remove the border
+        if (!hasVisibleLogs) {
+            logsDiv.className = '';
+        }
     }
 
     setPrettyPrintMode(on) {
