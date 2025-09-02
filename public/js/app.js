@@ -15,6 +15,11 @@ class LogBrowseApp {
         searchInput.addEventListener('input', () => {
             this.renderer.render();
         });
+
+        const prettyToggle = document.getElementById('toggle-pretty');
+        prettyToggle.addEventListener('toggle', (e) => {
+            this.renderer.setPrettyPrintMode(e.detail.pretty);
+        });
     }
 
     async fetchLogs() {

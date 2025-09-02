@@ -3,6 +3,7 @@ class LogRenderer {
     constructor() {
         this.allLogs = [];
         this.expanded = {};
+        this.prettyPrintMode = false;
     }
 
     setLogs(logs) {
@@ -15,33 +16,47 @@ class LogRenderer {
         logsDiv.innerHTML = '';
         if (this.allLogs.length === 0) {
             logsDiv.className = '';
-            // Optionally, show a message:
-            // logsDiv.innerHTML = '<div class="text-gray-400 text-center py-8">No logs yet</div>';
             return;
         }
-        // Add outer rounded border and background
         logsDiv.className = 'border border-gray-200 rounded-lg bg-white overflow-hidden';
 
         // Reverse the logs so newest is on top
         this.allLogs.slice().reverse().forEach((log, i) => {
-            // Adjust index for expanded state
             const idx = this.allLogs.length - 1 - i;
             let logStr = typeof log === 'string' ? log : JSON.stringify(log);
             if (search && logStr.toLowerCase().indexOf(search) === -1) return;
 
             const container = this.createLogContainer();
-            const header = this.createLogHeader(logStr, idx);
 
-            if (this.expanded[idx]) {
-                const expandedDiv = this.createExpandedContent(log, logStr);
-                container.appendChild(header);
-                container.appendChild(expandedDiv);
+            if (this.prettyPrintMode) {
+                // Show all logs pretty-printed, full width
+                const prettyDiv = document.createElement('div');
+                prettyDiv.className = 'px-4 py-2 font-mono text-xs text-gray-700 bg-gray-50 border-b border-gray-200 last:border-b-0';
+                let pretty = '';
+                try {
+                    pretty = JSON.stringify(typeof log === 'string' ? JSON.parse(log) : log, null, 2);
+                } catch {
+                    pretty = logStr;
+                }
+                prettyDiv.innerHTML = `<pre class="overflow-x-auto">${pretty}</pre>`;
+                container.appendChild(prettyDiv);
             } else {
-                container.appendChild(header);
+                const header = this.createLogHeader(logStr, idx);
+                if (this.expanded[idx]) {
+                    const expandedDiv = this.createExpandedContent(log, logStr);
+                    container.appendChild(header);
+                    container.appendChild(expandedDiv);
+                } else {
+                    container.appendChild(header);
+                }
             }
-
             logsDiv.appendChild(container);
         });
+    }
+
+    setPrettyPrintMode(on) {
+        this.prettyPrintMode = on;
+        this.render();
     }
 
     createLogContainer() {
@@ -68,9 +83,9 @@ class LogRenderer {
     }
 
     createExpandedContent(log, logStr) {
-    const expandedDiv = document.createElement('div');
-    // Add a lighter, thinner border only above the expanded area for separation
-    expandedDiv.className = 'bg-gray-50 px-4 pb-4 border-t border-gray-200';
+        const expandedDiv = document.createElement('div');
+        // Add a lighter, thinner border only above the expanded area for separation
+        expandedDiv.className = 'bg-gray-50 px-4 pb-4 border-t border-gray-200';
 
         // Pretty print JSON if possible
         let pretty = '';

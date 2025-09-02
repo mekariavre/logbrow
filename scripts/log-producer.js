@@ -19,4 +19,4 @@ setInterval(() => {
         }
     };
     console.log(JSON.stringify(log));
-}, 1000);
+}, 5000);
