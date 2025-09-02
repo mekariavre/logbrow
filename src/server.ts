@@ -30,5 +30,5 @@ process.stdin.on('data', (chunk) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`LogBrowse server running at http://localhost:${PORT}`);
+    console.log(`logbrow is running. inspect your logs at http://localhost:${PORT}`);
 });
