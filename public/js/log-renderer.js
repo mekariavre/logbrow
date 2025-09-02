@@ -7,7 +7,35 @@ class LogRenderer {
     }
 
     setLogs(logs) {
-        this.allLogs = logs;
+        // Group consecutive unstructured (non-JSON) log lines into a single entry
+        const groupedLogs = [];
+        let buffer = [];
+        const isJson = (str) => {
+            if (typeof str !== 'string') return false;
+            try {
+                const obj = JSON.parse(str);
+                // Accept only objects or arrays as valid JSON logs
+                return typeof obj === 'object' && obj !== null;
+            } catch {
+                return false;
+            }
+        };
+        for (let i = 0; i < logs.length; i++) {
+            const log = logs[i];
+            if (isJson(log)) {
+                if (buffer.length) {
+                    groupedLogs.push(buffer.join('\n'));
+                    buffer = [];
+                }
+                groupedLogs.push(log);
+            } else {
+                buffer.push(log);
+            }
+        }
+        if (buffer.length) {
+            groupedLogs.push(buffer.join('\n'));
+        }
+        this.allLogs = groupedLogs;
     }
 
     render() {
