@@ -5,9 +5,12 @@ import { addLog, getLogs } from './log-store';
 const app = express();
 const PORT = process.env.PORT || 3100;
 
-// Serve static HTML
+// Serve static files from public directory
+app.use(express.static(path.join(__dirname, '..', 'public')));
+
+// Serve index.html at root
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'views', 'index.html'));
+    res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
 });
 
 // Logs API

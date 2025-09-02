@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>LogBrowse</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'mono': ['SF Mono', 'Monaco', 'Cascadia Code', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-white text-gray-800 font-sans">
+    <div class="max-w-6xl mx-auto p-8">
+        <h1 class="text-3xl font-semibold mb-8 text-black">LogBrowse</h1>
+        <input id="search" type="text" placeholder="🔍 Search logs..."
+            class="w-full mb-8 text-base p-3 border border-gray-300 rounded-lg bg-white outline-none focus:border-blue-500 transition-colors duration-200" />
+        <div id="logs"></div>
+    </div>
+
+    <script src="js/log-renderer.js"></script>
+    <script src="js/app.js"></script>
+</body>
+
+</html>
