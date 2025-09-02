@@ -69,7 +69,7 @@ class LogRenderer {
     createLogHeader(logStr, idx) {
         const header = document.createElement('div');
         // Tighter padding, no rounded corners, seamless look
-        header.className = 'px-4 py-2 cursor-pointer font-mono text-sm text-gray-600 relative bg-white hover:bg-gray-50 transition-all duration-200';
+        header.className = 'px-4 py-2 cursor-pointer font-mono text-xs text-gray-600 relative bg-white hover:bg-gray-50 transition-all duration-200';
         header.onclick = () => {
             this.expanded[idx] = !this.expanded[idx];
             this.render();
