@@ -1,4 +1,3 @@
-
 # logbrow
 
 ![LogBrow Screenshot](./screenshot.png)
@@ -8,19 +7,21 @@ Utility to browse logs in your browser. Pipe logs into the server and view them 
 ## Usage
 
 ```sh
-cat your.log | npm start
+cat your.log | logbrow
 # or
-some-app | npm start
+some-app | logbrow
 ```
 
-Then open [http://localhost:3966](http://localhost:3966) in your browser.
+## Installation
+
+Pre-built binaries are available on the [Releases page](https://github.com/mekariavre/logbrow/releases/latest).
 
 ## Development
 
 - `npm install` to install dependencies
 - `npm start` to run the server with ts-node
 
-## Building & Installation (Standalone Binary)
+## Building & Installation
 
 You can build and install LogBrow as a standalone executable using [pkg](https://github.com/vercel/pkg) and the provided Makefile:
 
@@ -35,9 +36,3 @@ You can build and install LogBrow as a standalone executable using [pkg](https:/
 	The Makefile will automatically install `pkg` globally if it is not already available in your PATH.
 	The binaries will be in the `dist/` folder (e.g., `dist/logbrow-macos`).
 
-## Project Structure
-
-- `src/server.ts` - Main server entry point
-- `src/controllers/logsController.ts` - Log storage and API
-- `src/routes/logs.ts` - API route for logs
-- `src/views/index.html` - Simple log viewer UI
