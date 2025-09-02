@@ -1,6 +1,8 @@
 // Main application logic
 class LogBrowApp {
     constructor() {
+        this.logs = [];
+        this.freezeAtIndex = -1;
         this.renderer = new LogRenderer();
         this.init();
     }
@@ -25,28 +27,45 @@ class LogBrowApp {
         jsonOnlyToggle.addEventListener('toggle', (e) => {
             this.renderer.setJsonOnlyMode(e.detail.on);
         });
+
+        const freezeToggle = document.getElementById('toggle-freeze');
+        freezeToggle.addEventListener('toggle', (e) => {
+            this.toggleFreeze();
+        });
+    }
+
+    async toggleFreeze() {
+        this.freezeAtIndex = this.freezeAtIndex >= 0 ? -1 : this.logs.length;
     }
 
     async fetchLogs() {
         try {
             const res = await fetch('/logs');
             const data = await res.json();
-            this.renderer.setLogs(data);
-            this.renderer.render();
+            this.logs = data;
+            this.renderLogs();
         } catch (error) {
             console.error('Failed to fetch logs:', error);
-            this.renderer.setLogs([]);
+            this.logs = [];
             this.renderer.render();
         }
+    }
+
+    async renderLogs() {
+        const visibleLogs = this.freezeAtIndex >= 0 ? this.logs.slice(0, this.freezeAtIndex) : this.logs;
+        this.renderer.setLogs(visibleLogs);
+        this.renderer.render();
     }
 
     startFetching() {
         // Fetch logs immediately
         this.fetchLogs();
+        this.renderLogs();
 
         // Then fetch every second
         setInterval(() => {
             this.fetchLogs();
+            this.renderLogs();
         }, 1000);
     }
 }
