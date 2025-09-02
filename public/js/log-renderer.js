@@ -14,7 +14,10 @@ class LogRenderer {
         const logsDiv = document.getElementById('logs');
         logsDiv.innerHTML = '';
 
-        this.allLogs.forEach((log, idx) => {
+        // Reverse the logs so newest is on top
+        this.allLogs.slice().reverse().forEach((log, i) => {
+            // Adjust index for expanded state
+            const idx = this.allLogs.length - 1 - i;
             let logStr = typeof log === 'string' ? log : JSON.stringify(log);
             if (search && logStr.toLowerCase().indexOf(search) === -1) return;
 
