@@ -31,14 +31,24 @@ class LogRenderer {
             if (this.prettyPrintMode) {
                 // Show all logs pretty-printed, full width
                 const prettyDiv = document.createElement('div');
-                prettyDiv.className = 'px-4 py-2 font-mono text-xs text-gray-700 bg-gray-50 border-b border-gray-200 last:border-b-0';
+                prettyDiv.className = 'px-4 py-2 bg-gray-50 border-b border-gray-200 last:border-b-0';
                 let pretty = '';
                 try {
                     pretty = JSON.stringify(typeof log === 'string' ? JSON.parse(log) : log, null, 2);
                 } catch {
                     pretty = logStr;
                 }
-                prettyDiv.innerHTML = `<pre class="overflow-x-auto">${pretty}</pre>`;
+                const codeBlock = document.createElement('pre');
+                codeBlock.className = 'overflow-x-auto m-0';
+                const code = document.createElement('code');
+                code.className = 'language-json text-xs';
+                code.style.background = 'transparent';
+                code.textContent = pretty;
+                codeBlock.appendChild(code);
+                prettyDiv.appendChild(codeBlock);
+
+                // Apply syntax highlighting
+                hljs.highlightElement(code);
                 container.appendChild(prettyDiv);
             } else {
                 const header = this.createLogHeader(logStr, idx);
@@ -95,7 +105,18 @@ class LogRenderer {
             pretty = logStr;
         }
 
-        expandedDiv.innerHTML = `<pre class="font-mono text-xs overflow-x-auto text-gray-700">${pretty}</pre>`;
+        const codeBlock = document.createElement('pre');
+        codeBlock.className = 'overflow-x-auto m-0';
+        const code = document.createElement('code');
+        code.className = 'language-json text-xs';
+        code.style.background = 'transparent';
+        code.textContent = pretty;
+        codeBlock.appendChild(code);
+        expandedDiv.appendChild(codeBlock);
+
+        // Apply syntax highlighting
+        hljs.highlightElement(code);
+
         return expandedDiv;
     }
 
