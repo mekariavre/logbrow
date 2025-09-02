@@ -3,7 +3,7 @@
 
 ![LogBrow Screenshot](./screenshot.png)
 
-Utility to browse logs in your browser. Pipe logs into the server and view them live at http://localhost:3000.
+Utility to browse logs in your browser. Pipe logs into the server and view them live at http://localhost:3966.
 
 ## Usage
 
@@ -13,7 +13,7 @@ cat your.log | npm start
 some-app | npm start
 ```
 
-Then open [http://localhost:3000](http://localhost:3000) in your browser.
+Then open [http://localhost:3966](http://localhost:3966) in your browser.
 
 ## Development
 

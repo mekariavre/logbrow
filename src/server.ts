@@ -3,7 +3,7 @@ import path from 'path';
 import { addLog, getLogs } from './log-store';
 
 const app = express();
-const PORT = process.env.PORT || 3100;
+const PORT = process.env.PORT || 3966;
 
 // Serve static files from public directory
 app.use(express.static(path.join(__dirname, '..', 'public')));
