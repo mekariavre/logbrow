@@ -49,7 +49,7 @@ class LogRenderer {
 
         // Track if any logs will be displayed
         let hasVisibleLogs = false;
-        
+
         // Reverse the logs so newest is on top
         this.allLogs.slice().reverse().forEach((log, i) => {
             const idx = this.allLogs.length - 1 - i;
@@ -98,7 +98,7 @@ class LogRenderer {
             }
             logsDiv.appendChild(container);
         });
-        
+
         // If no logs were visible after filtering, remove the border
         if (!hasVisibleLogs) {
             logsDiv.className = '';
@@ -136,7 +136,7 @@ class LogRenderer {
     createExpandedContent(log, logStr) {
         const expandedDiv = document.createElement('div');
         // Add a lighter, thinner border only above the expanded area for separation
-        expandedDiv.className = 'bg-gray-50 px-4 pb-4 border-t border-gray-200';
+        expandedDiv.className = 'bg-gray-50 px-1 pb-1 border-t border-gray-200';
 
         // Pretty print JSON if possible
         let pretty = '';
