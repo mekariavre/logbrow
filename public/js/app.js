@@ -20,6 +20,11 @@ class LogBrowseApp {
         prettyToggle.addEventListener('toggle', (e) => {
             this.renderer.setPrettyPrintMode(e.detail.pretty);
         });
+
+        const jsonOnlyToggle = document.getElementById('toggle-json-only');
+        jsonOnlyToggle.addEventListener('toggle', (e) => {
+            this.renderer.setJsonOnlyMode(e.detail.on);
+        });
     }
 
     async fetchLogs() {

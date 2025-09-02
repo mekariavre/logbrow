@@ -22,7 +22,10 @@ app.get('/logs', (req, res) => {
 process.stdin.setEncoding('utf8');
 process.stdin.on('data', (chunk) => {
     chunk.toString().split('\n').forEach(line => {
-        if (line.trim()) addLog(line);
+        if (line.trim()) {
+            addLog(line);
+            console.log(line);
+        }
     });
 });
 

@@ -1,13 +1,43 @@
 // Log rendering functionality
+
 class LogRenderer {
     constructor() {
         this.allLogs = [];
         this.expanded = {};
         this.prettyPrintMode = false;
+        this.jsonOnlyMode = false;
     }
 
     setLogs(logs) {
-        this.allLogs = logs;
+        // Group consecutive unstructured (non-JSON) log lines into a single entry
+        const groupedLogs = [];
+        let buffer = [];
+        const isJson = (str) => {
+            if (typeof str !== 'string') return false;
+            try {
+                const obj = JSON.parse(str);
+                // Accept only objects or arrays as valid JSON logs
+                return typeof obj === 'object' && obj !== null;
+            } catch {
+                return false;
+            }
+        };
+        for (let i = 0; i < logs.length; i++) {
+            const log = logs[i];
+            if (isJson(log)) {
+                if (buffer.length) {
+                    groupedLogs.push(buffer.join('\n'));
+                    buffer = [];
+                }
+                groupedLogs.push(log);
+            } else {
+                buffer.push(log);
+            }
+        }
+        if (buffer.length) {
+            groupedLogs.push(buffer.join('\n'));
+        }
+        this.allLogs = groupedLogs;
     }
 
     render() {
@@ -21,12 +51,24 @@ class LogRenderer {
 
         // Track if any logs will be displayed
         let hasVisibleLogs = false;
-        
+
+        // Helper to check if a log is JSON
+        const isJson = (str) => {
+            if (typeof str !== 'string') return false;
+            try {
+                const obj = JSON.parse(str);
+                return typeof obj === 'object' && obj !== null;
+            } catch {
+                return false;
+            }
+        };
+
         // Reverse the logs so newest is on top
         this.allLogs.slice().reverse().forEach((log, i) => {
             const idx = this.allLogs.length - 1 - i;
             let logStr = typeof log === 'string' ? log : JSON.stringify(log);
             if (search && logStr.toLowerCase().indexOf(search) === -1) return;
+            if (this.jsonOnlyMode && !isJson(logStr)) return;
 
             // Mark that we have visible logs
             if (!hasVisibleLogs) {
@@ -70,11 +112,16 @@ class LogRenderer {
             }
             logsDiv.appendChild(container);
         });
-        
+
         // If no logs were visible after filtering, remove the border
         if (!hasVisibleLogs) {
             logsDiv.className = '';
         }
+    }
+
+    setJsonOnlyMode(on) {
+        this.jsonOnlyMode = on;
+        this.render();
     }
 
     setPrettyPrintMode(on) {
@@ -108,7 +155,7 @@ class LogRenderer {
     createExpandedContent(log, logStr) {
         const expandedDiv = document.createElement('div');
         // Add a lighter, thinner border only above the expanded area for separation
-        expandedDiv.className = 'bg-gray-50 px-4 pb-4 border-t border-gray-200';
+        expandedDiv.className = 'bg-gray-50 px-1 pb-1 border-t border-gray-200';
 
         // Pretty print JSON if possible
         let pretty = '';
